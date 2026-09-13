@@ -1,0 +1,5 @@
+zxing-cpp
+opencv-python
+numpy
+Pillow
+flask
