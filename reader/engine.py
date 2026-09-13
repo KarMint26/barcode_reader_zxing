@@ -242,7 +242,7 @@ class BarcodeEngine:
                             M = cv2.getPerspectiveTransform(pts_roi, dst)
                             warped = cv2.warpPerspective(gray, M, (rw, rh))
                             warped_pad = cv2.copyMakeBorder(warped, 30, 30, 60, 60, cv2.BORDER_CONSTANT, value=255)
-                            try_decode(warped_pad, "Stage 4.4: OpenCV ROI Rectified")
+                            try_decode(warped_pad, "Stage 4.4: Geometry Rectified")
                 except Exception:
                     pass
 

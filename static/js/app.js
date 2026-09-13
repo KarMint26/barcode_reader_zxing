@@ -54,22 +54,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.ready) {
         engineStatus.innerHTML = `
           <span class="status-dot online"></span>
-          <span class="status-text">Engine Ready (zxing-cpp + OpenCV)</span>
+          <span class="status-text">Engine Ready</span>
         `;
       } else {
-        const missing = [];
-        if (!data.dependencies.zxingcpp) missing.push("zxing-cpp");
-        if (!data.dependencies.cv2) missing.push("opencv-python");
-
         engineStatus.innerHTML = `
           <span class="status-dot" style="background-color: var(--danger)"></span>
-          <span class="status-text">Library Belum Lengkap: ${missing.join(", ")}</span>
+          <span class="status-text">Service Initializing...</span>
         `;
-        showAlert(
-          `Library <code>${missing.join(", ")}</code> belum terinstall di virtual environment.<br>
-           Jalankan: <code>pip install -r requirements.txt</code> lalu restart server.`,
-          "error"
-        );
       }
     } catch (e) {
       engineStatus.innerHTML = `

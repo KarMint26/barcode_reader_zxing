@@ -15,12 +15,12 @@ def index():
 
 @app.route("/api/status", methods=["GET"])
 def status():
-    """Check if barcode dependencies are available."""
+    """Check if barcode engine is ready."""
     availability = BarcodeEngine.is_available()
     all_ready = all(availability.values())
     return jsonify({
         "ready": all_ready,
-        "dependencies": availability
+        "status": "online" if all_ready else "offline"
     })
 
 
