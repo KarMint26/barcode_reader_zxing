@@ -1,4 +1,6 @@
-__pycache__
+__pycache__/
+*.pyc
 .venv/
 myenv/
 myvenv/
+last_scan.jpg
