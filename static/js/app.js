@@ -19,6 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnApplyCrop = document.getElementById("btnApplyCrop");
   const btnCancelCrop = document.getElementById("btnCancelCrop");
   const chkAggressive = document.getElementById("chkAggressive");
+  const chkFormatHuawei = document.getElementById("chkFormatHuawei");
+
+  // Converts 16-character hex GPON SN (e.g. 48575443F3BF3BB9) to Vendor format (HWTCF3BF3BB9)
+  function parseGponSn(rawText) {
+    if (!rawText) return null;
+    const clean = rawText.trim().toUpperCase();
+    if (clean.length === 16 && /^[0-9A-F]{16}$/.test(clean)) {
+      const vendorHex = clean.substring(0, 8);
+      let vendorAscii = "";
+      for (let i = 0; i < 8; i += 2) {
+        vendorAscii += String.fromCharCode(parseInt(vendorHex.substring(i, i + 2), 16));
+      }
+      if (/^[A-Za-z0-9]{4}$/.test(vendorAscii)) {
+        return `${vendorAscii}${clean.substring(8)}`;
+      }
+    }
+    return null;
+  }
 
   const barcodeCount = document.getElementById("barcodeCount");
   const scanTime = document.getElementById("scanTime");
@@ -148,6 +166,14 @@ document.addEventListener("DOMContentLoaded", () => {
       processScan(activeFile);
     }
   });
+
+  if (chkFormatHuawei) {
+    chkFormatHuawei.addEventListener("change", () => {
+      if (currentBarcodes && currentBarcodes.length > 0) {
+        renderResults(currentBarcodes);
+      }
+    });
+  }
 
   // 5. File Processing
   function handleFile(file) {
@@ -544,10 +570,47 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const isHuaweiMode = chkFormatHuawei && chkFormatHuawei.checked;
+
     barcodes.forEach((item, index) => {
       const card = document.createElement("div");
       card.className = "barcode-card";
       card.dataset.index = index;
+
+      const gponSn = item.gpon_sn || parseGponSn(item.text);
+
+      let primaryText = item.text;
+      let secondaryRowHtml = "";
+
+      if (gponSn) {
+        if (isHuaweiMode) {
+          primaryText = gponSn;
+          secondaryRowHtml = `
+            <div class="gpon-secondary-row" title="Format Asli Hex 16-Digit">
+              <span class="barcode-text" style="color: var(--text-secondary); font-size: 0.8rem;">
+                <span class="gpon-tag" style="background: rgba(59,130,246,0.15); color: #60a5fa; border-color: rgba(59,130,246,0.3);">HEX</span>
+                ${escapeHtml(item.text)}
+              </span>
+              <button class="btn-copy" title="Salin Raw Hex (16 Digit)" data-text="${escapeHtml(item.text)}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          `;
+        } else {
+          primaryText = item.text;
+          secondaryRowHtml = `
+            <div class="gpon-secondary-row" title="Format Huawei GPON SN">
+              <span class="barcode-text">
+                <span class="gpon-tag">HWTC / GPON</span>
+                ${escapeHtml(gponSn)}
+              </span>
+              <button class="btn-copy" title="Salin Format Huawei (HWTC...)" data-text="${escapeHtml(gponSn)}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          `;
+        }
+      }
 
       card.innerHTML = `
         <div class="card-top">
@@ -555,11 +618,12 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="stage-badge">${escapeHtml(item.stage || '')}</span>
         </div>
         <div class="barcode-value-wrap">
-          <span class="barcode-text">${escapeHtml(item.text)}</span>
-          <button class="btn-copy" title="Salin ke clipboard" data-text="${escapeHtml(item.text)}">
+          <span class="barcode-text">${escapeHtml(primaryText)}</span>
+          <button class="btn-copy" title="Salin ke clipboard" data-text="${escapeHtml(primaryText)}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </button>
         </div>
+        ${secondaryRowHtml}
       `;
 
       // Highlight on hover
@@ -576,19 +640,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Copy action
-      const btnCopy = card.querySelector(".btn-copy");
-      btnCopy.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const textToCopy = btnCopy.dataset.text;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          btnCopy.classList.add("copied");
-          btnCopy.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
-          showToast(`Tersalin: ${textToCopy}`);
-          setTimeout(() => {
-            btnCopy.classList.remove("copied");
-            btnCopy.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-          }, 1800);
+      // Copy actions for all copy buttons in card
+      const copyButtons = card.querySelectorAll(".btn-copy");
+      copyButtons.forEach((btnCopy) => {
+        btnCopy.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const textToCopy = btnCopy.dataset.text;
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            btnCopy.classList.add("copied");
+            const originalIcon = btnCopy.innerHTML;
+            btnCopy.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+            showToast(`Tersalin: ${textToCopy}`);
+            setTimeout(() => {
+              btnCopy.classList.remove("copied");
+              btnCopy.innerHTML = originalIcon;
+            }, 1800);
+          });
         });
       });
 

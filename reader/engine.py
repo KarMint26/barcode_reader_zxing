@@ -15,6 +15,24 @@ except ImportError:
     zxingcpp = None
 
 
+def parse_gpon_sn(text: str) -> Optional[str]:
+    """
+    Converts 16-digit hex GPON Serial Numbers (e.g. 48575443F3BF3BB9)
+    to Vendor Prefix format (e.g. HWTCF3BF3BB9).
+    First 8 hex digits (4 bytes) are ASCII vendor ID (48575443 -> 'HWTC').
+    """
+    clean = text.strip().upper()
+    if len(clean) == 16 and all(c in "0123456789ABCDEF" for c in clean):
+        try:
+            vendor_hex = clean[:8]
+            vendor_ascii = bytes.fromhex(vendor_hex).decode("ascii", errors="ignore")
+            if len(vendor_ascii) == 4 and vendor_ascii.isalnum():
+                return f"{vendor_ascii}{clean[8:]}"
+        except Exception:
+            pass
+    return None
+
+
 class BarcodeEngine:
     """
     Ultra-resilient Barcode Reader using zxing-cpp + multi-stage OpenCV preprocessing
@@ -87,7 +105,7 @@ class BarcodeEngine:
                     max_x = min(img_width, max(xs))
                     max_y = min(img_height, max(ys))
 
-                    detected_map[key] = {
+                    item_data = {
                         "text": b.text,
                         "format": format_name,
                         "orientation": getattr(b, 'orientation', 0),
@@ -100,6 +118,13 @@ class BarcodeEngine:
                             "height": max(1, max_y - min_y)
                         }
                     }
+                    gpon = parse_gpon_sn(b.text)
+                    if gpon:
+                        item_data["gpon_sn"] = gpon
+                        item_data["huawei_sn"] = gpon
+                        item_data["is_huawei"] = gpon.startswith("HWTC")
+
+                    detected_map[key] = item_data
 
         def try_decode(img_input, stage_name: str, transform_coords=None):
             """Scans with both LocalAverage and GlobalHistogram binarizers."""

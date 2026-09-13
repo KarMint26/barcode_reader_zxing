@@ -146,6 +146,9 @@ fetch("https://barcode-read.app-hallonet.my.id/api/scan", {
   "barcodes": [
     {
       "text": "48575443F3BF3BB9",
+      "huawei_sn": "HWTCF3BF3BB9",
+      "is_huawei": true,
+      "gpon_sn": "HWTCF3BF3BB9",
       "format": "Code128",
       "orientation": 0,
       "stage": "Stage 3: Upscale 2.0x",
@@ -188,7 +191,10 @@ fetch("https://barcode-read.app-hallonet.my.id/api/scan", {
 - **`count`** *(integer)*: Jumlah barcode unik yang berhasil dibaca dari foto.
 - **`time_ms`** *(float)*: Durasi waktu eksekusi proses pembacaan dalam milidetik.
 - **`barcodes`** *(array)*: Daftar barcode yang ditemukan:
-  - **`text`** *(string)*: Nilai data barcode (misal Serial Number atau MAC Address).
-  - **`format`** *(string)*: Jenis/symbology barcode (`Code128`, `Code39`, `QRCode`, `EAN13`, dll.).
+  - **`text`** *(string)*: Nilai data asli mentah barcode (misal: `"48575443F3BF3BB9"`).
+  - **`huawei_sn`** *(string, opsional)*: Nilai Serial Number format Huawei (`"HWTCF3BF3BB9"`). Muncul otomatis jika barcode adalah SN modem 16-digit.
+  - **`is_huawei`** *(boolean, opsional)*: Bernilai `true` jika terdeteksi modem Huawei (`48575443...`).
+  - **`gpon_sn`** *(string, opsional)*: Format vendor GPON (`HWTC...`, `ZTEG...`, `FHTC...`, `ALCL...`).
+  - **`format`** *(string)*: Jenis barcode (`Code128`, `Code39`, `QRCode`, `EAN13`, dll.).
   - **`bounds`** *(object)*: Koordinat kotak pembatas pada foto asli (`x`, `y`, `width`, `height`).
-  - **`polygon`** *(array)*: 4 koordinat titik sudut barcode untuk rendering visual atau *highlighting*.
+  - **`polygon`** *(array)*: 4 titik koordinat sudut barcode.

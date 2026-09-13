@@ -375,6 +375,89 @@ canvas.crop-mode {
   justify-content: space-between;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
+  gap: 8px;
+}
+
+.results-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toggle-xs {
+  font-size: 0.72rem;
+}
+
+.toggle-xs .toggle-slider {
+  width: 26px;
+  height: 14px;
+}
+
+.toggle-xs .toggle-slider::before {
+  width: 10px;
+  height: 10px;
+  left: 2px;
+  top: 2px;
+}
+
+.toggle-xs input:checked + .toggle-slider::before {
+  transform: translateX(12px);
+}
+
+.toggle-xs .toggle-label {
+  font-size: 0.72rem;
+  color: #38bdf8;
+  font-weight: 500;
+}
+
+.gpon-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  text-transform: uppercase;
+  margin-right: 6px;
+  letter-spacing: 0.04em;
+}
+
+.gpon-secondary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(16, 185, 129, 0.08);
+  border: 1px dashed rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.gpon-secondary-row .barcode-text {
+  color: #34d399;
+  font-size: 0.88rem;
+}
+
+.btn-toggle-format {
+  background: transparent;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-toggle-format:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
 }
 
 .results-title {

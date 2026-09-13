@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background Badge -->
+  <rect width="64" height="64" rx="16" fill="#0f172a"/>
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.4"/>
+  
+  <!-- Optical Scan Laser Beam -->
+  <line x1="6" y1="32" x2="58" y2="32" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" filter="drop-shadow(0 0 4px #06b6d4)"/>
+  
+  <!-- Barcode Vertical Bars -->
+  <rect x="12" y="14" width="4" height="36" rx="2" fill="#38bdf8"/>
+  <rect x="19" y="14" width="2" height="36" rx="1" fill="#f8fafc"/>
+  <rect x="24" y="14" width="6" height="36" rx="2" fill="#38bdf8"/>
+  <rect x="33" y="14" width="3" height="36" rx="1.5" fill="#f8fafc"/>
+  <rect x="39" y="14" width="5" height="36" rx="2" fill="#38bdf8"/>
+  <rect x="47" y="14" width="2" height="36" rx="1" fill="#f8fafc"/>
+  <rect x="51" y="14" width="3" height="36" rx="1.5" fill="#38bdf8"/>
+  
+  <!-- Corner Targeting Accents -->
+  <path d="M8 18V12C8 9.79086 9.79086 8 12 8H18" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M46 8H52C54.2091 8 56 9.79086 56 12V18" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M56 46V52C56 54.2091 54.2091 56 52 56H46" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M18 56H12C9.79086 56 8 54.2091 8 52V46" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

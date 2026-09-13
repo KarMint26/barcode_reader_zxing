@@ -7,8 +7,8 @@
   <meta name="description" content="Layanan pembaca barcode cerdas berkemampuan tinggi untuk modem ONT dan berbagai jenis barcode.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/css/style.css?v=2.3">
 </head>
 <body>
   <div class="app-wrapper">
@@ -31,8 +31,8 @@
       </div>
 
       <div class="header-status" id="engineStatus">
-        <span class="status-dot pulsing"></span>
-        <span class="status-text">Memeriksa Status...</span>
+        <span class="status-dot online"></span>
+        <span class="status-text">Engine Ready</span>
       </div>
     </header>
 
@@ -85,7 +85,7 @@
               </button>
             </div>
             <div class="toolbar-right">
-              <label class="toggle-control" title="Mode multi-stage OpenCV untuk mengatasi pantulan cahaya dan gambar blur">
+              <label class="toggle-control" title="Mode penajaman cerdas untuk mengatasi pantulan cahaya dan gambar blur">
                 <input type="checkbox" id="chkAggressive" checked>
                 <span class="toggle-slider"></span>
                 <span class="toggle-label">Enhance Anti-Glare/Blur</span>
@@ -124,8 +124,15 @@
             Hasil Deteksi
             <span class="badge badge-count" id="barcodeCount">0</span>
           </h2>
-          <div class="scan-meta" id="scanMeta">
-            <span class="meta-time" id="scanTime">— ms</span>
+          <div class="results-header-actions">
+            <label class="toggle-control toggle-xs" title="Konversi otomatis SN Hex 16 digit (48575443...) menjadi format Huawei (HWTC...)">
+              <input type="checkbox" id="chkFormatHuawei" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Format Huawei</span>
+            </label>
+            <div class="scan-meta" id="scanMeta">
+              <span class="meta-time" id="scanTime">— ms</span>
+            </div>
           </div>
         </div>
 
@@ -163,6 +170,6 @@
 
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="/static/js/app.js"></script>
+  <script src="/static/js/app.js?v=2.2"></script>
 </body>
 </html>
